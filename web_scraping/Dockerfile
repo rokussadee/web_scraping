@@ -16,8 +16,17 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install Laravel dependencies
 RUN composer install
 
+# Add a script to wait for the database before running migrations
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+
+# Copy the startup script
+COPY startup.sh /usr/local/bin/startup
+RUN chmod +x /usr/local/bin/startup
+
+# Use the startup script as the CMD
+CMD ["/bin/bash", "-c", "/usr/local/bin/startup"]
+
 # Expose port 8000
 EXPOSE 8000
 
-# Start Apache
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

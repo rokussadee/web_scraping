@@ -9,6 +9,8 @@ services:
       - "8000:8000"
     volumes:
       - .:/var/www/html
+    depends_on:
+      - mysql
 
   scraper:
     build:
@@ -18,3 +20,12 @@ services:
       - "5000:5000"
     volumes:
       - ./app/PythonScripts:/app
+
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=EL_P4_WebScraping_SQL
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
