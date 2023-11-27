@@ -6,6 +6,11 @@
 
 ## Usage
 
+Navigate to the web-scraping directory.
+```text
+cd web-scraping/
+```
+
 Add .env file based on [.env.example](https://github.com/rokussadee/web_scraping/blob/development/web_scraping/.env.example).
 
 Run the Docker container.
