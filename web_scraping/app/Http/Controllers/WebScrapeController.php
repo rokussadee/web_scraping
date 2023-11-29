@@ -9,6 +9,7 @@ class WebScrapeController extends Controller
 {
     public function scrape(Request $request) {
         # code...
+        # kiggityCode
         $url = $request->get('url');
 
         $client =  new Client();
