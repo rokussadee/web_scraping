@@ -3,30 +3,67 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
+use Symfony\Component\Process\Process;
 
 class WebScrapeController extends Controller
 {
     public function scrape(Request $request) {
-        # code...
-        # kiggityCode
-        $url = $request->get('url');
+        $gender = $request->get('gender');
+        $category = $request->get('category');
+        $sort= $request->get('sort');
 
-        $client =  new Client();
+        //$results = [];
 
-        $response = $client->request(
-            'GET',
-            $url
-        );
+//        foreach ($categories as $category) {
+//            foreach ($priceRanges as $priceRange) {
+//                $process = new \Symfony\Component\Process\Process([
+//                    'python', 'path/to/your/scraper.py', '--category=' . $category, '--price_range=' . $priceRange,
+//                ]);
+//
+//                $process->run();
+//
+//                // Collect the results
+//                $results[] = $process->getOutput();
+//            }
+//        }
+//
 
-        $response_status_code = $response->getStatusCode();
-        $response_body = $response->getBody()->getContents();
+       // // Collect the results
+       // $results[] = $process->getOutput();
 
-        if ($response_status_code == 200) {
-            dd($response_body);
-        };
 
-        dd($response_status_code);
+       // return response()->json($results);
+       // }
+       // //
+
+        $process = new Process([
+            //'python', 'path/to/your/scraper.py', '--category=' . $category, '--price_range=' . $priceRange,
+            'docker-compose exec scraper python /app/scraper.py --gender ' . $gender . ' --category ' . $category . ' --sort ' . $sort,
+        ]);
+
+        // Option 1, using start
+
+//        $process->start();
+//
+//        foreach ($process as $type => $data) {
+//            if ($process::OUT === $type) {
+//                echo "\nRead from stdout: " . $data;
+//                # code...
+//            } else {
+//                echo "\nRead from stderr: " . $data;
+//            }
+//            # code...
+//
+        // Option 2, using run
+
+
+        $process->run(function ($type, $buffer): void {
+        if (Process::ERR === $type) {
+            echo 'ERR > '.$buffer;
+        } else {
+            echo 'OUT > '.$buffer;
+        }
+        });
+
     }
-    //
 }
