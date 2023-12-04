@@ -2,9 +2,7 @@
 import requests
 import sys
 from bs4 import BeautifulSoup
-
 import argparse
-
 
 def scrape_products():
 
@@ -16,20 +14,13 @@ def scrape_products():
 
     args = parser.parse_args()
 
-    print(args)
-
     url = f"https://www.torfs.be/nl/{args.gender}/{args.category}/?cgid={args.gender}-{args.category}&page=1.0&srule={args.sort}&sz=24"
-    print(url)
-
     response = requests.get(url)
-
-    print("scraper log")
-    print(response)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extract quotes
+        # Extract products
         product_tiles = soup.find_all("div", class_="product-tile-wrapper")
         for product_tile in product_tiles:
             product_manufacturer = product_tile.find("div", class_="pdp-link")
@@ -47,4 +38,4 @@ def scrape_products():
             print(product_dict)
 
 if __name__ == "__main__":
-    scrape_products()
+   scrape_products()

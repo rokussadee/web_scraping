@@ -13,6 +13,15 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install Python and pip
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Copy Python scripts to the container
+COPY app/PythonScripts /app/PythonScripts
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r /app/PythonScripts/requirements.txt
+
 # Install Laravel dependencies
 RUN composer install
 
