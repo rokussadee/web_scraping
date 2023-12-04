@@ -31,7 +31,7 @@ def scrape_products():
             product_dict = {
                     'product_manufacturer': product_manufacturer.get_text() if product_manufacturer else "N/A",
                     'product_name': product_name.get_text() if product_name else "N/A",
-                    'product_image_link': product_image_link.get('href') if product_image_link else "N/A",
+                    'product_image_link': product_image_link.get('src') if product_image_link else "N/A",
                     'product_price': product_price.get_text() if product_price else "N/A",
                     }
 

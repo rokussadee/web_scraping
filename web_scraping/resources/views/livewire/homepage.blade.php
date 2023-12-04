@@ -1,10 +1,8 @@
 <?php
-
-
-
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
 use function Livewire\Volt\{state};
+use function Livewire\Volt\{mount};
 use Symfony\Component\Process\Process;
 
 state([
@@ -16,6 +14,8 @@ state([
 ]);
 
 $scrape = function() {
+
+        $this->results = [];
         // Build the command
         $command = [
             'python3',
@@ -91,10 +91,13 @@ $scrape = function() {
         };
 };
 
+mount(function() use ($scrape) {
+    $this->scrape();
+}
+);
 ?>
 
 <div>
-    <input wire:model="url" type="text" placeholder="Enter URL">
     <select wire:model="gender">
         <option value="heren">Heren</option>
         <option value="dames">Dames</option>
@@ -114,7 +117,7 @@ $scrape = function() {
     <!-- Display the results in tiles using tailwindcss styling -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         @foreach($results as $result)
-            <div class="border p-4 rounded shadow">
+            <div class="border p-4 rounded shadow text-white">
                 <!-- Display individual result data here -->
                 <img src="{{$result['product_image_link']}}">
                 <p class="">{{ $result['product_manufacturer'] }}</p>
