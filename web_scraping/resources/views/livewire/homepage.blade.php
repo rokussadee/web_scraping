@@ -16,7 +16,6 @@ state([
 $scrape = function() {
 
         $this->results = [];
-        // Build the command
         $command = [
             'python3',
             '/app/PythonScripts/scraper.py',
@@ -28,7 +27,6 @@ $scrape = function() {
             $this->sort
         ];
 
-        // Create a new Process
         $process = new Process($command);
 
         $process->start();
@@ -36,10 +34,8 @@ $scrape = function() {
         foreach ($process as $type => $data) {
             if ($process::OUT === $type) {
 
-                // Remove leading and trailing triple double quotes
                 $jsonString = trim($data, '"""');
 
-                // Replace single quotes with double quotes
                 $jsonString = str_replace("'", '"', $jsonString);
 
                 $jsonString = substr($jsonString, 0, strlen($jsonString)-3);
@@ -50,44 +46,34 @@ $scrape = function() {
                 foreach ($jsonObjects as $jsonObject) {
 
 
-                    // Remove leading and trailing double quotes
                     $jsonString = trim($jsonObject, '"');
 
-                    // Replace escaped newline characters with actual newlines
                     $jsonString = str_replace('\n', "", $jsonString);
 
-                    // Remove whitespace between keys and values
                     $jsonString = preg_replace('/"\s*:\s*"/', '":"', $jsonString);
 
-                    // Replace escaped double quotes with actual double quotes
                     $jsonString = str_replace('\"', '"', $jsonString);
 
                     $jsonString = str_replace('None', '"null"', $jsonString);
 
                     $jsonString = '{"'. $jsonString . '"}';
 
-                    // dd($jsonString);
-
-                    // Decode the JSON-like string into a PHP associative array
                     $decodedData = json_decode($jsonString, true);
 
                     if (json_last_error() === JSON_ERROR_NONE) {
-                        // Add the decoded data to the results array
                         $this->results[] = $decodedData;
 
                     } else {
-                        // Handle decoding error
                         echo 'JSON decoding error: ' . json_last_error_msg();
                     }
                 };
 
-            } else { // $process::ERR === $type
+            } else {
                 echo "\nRead from stderr: ".$data;
             }
         };
 
         if (!$process->isSuccessful()) {
-            // Handle process failure
         };
 };
 
@@ -116,21 +102,26 @@ mount(function() use ($scrape) {
         <option value="prijs-laag-hoog">Prijs (laag - hoog)</option>
         <option value="prijs-hoog-laag">Prijs (hoog - laag)</option>
 
-        <!-- Add other sort options as needed -->
     </select>
     <button wire:click="scrape">Scrape</button>
 
-    <!-- Display the results in tiles using tailwindcss styling -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         @foreach($results as $result)
-            <div class="border p-4 rounded shadow text-white">
-                <!-- Display individual result data here -->
-                <img src="{{$result['product_image_link']}}">
-                <p class="">{{ $result['product_manufacturer'] }}</p>
-                <p>{{ $result['product_name'] }}</p>
-                <p>{{ $result['product_price'] }}</p>
-                <!-- Add more fields as needed -->
+            <div class="p-10">
+            <div class="rounded overflow-hidden shadow-lg">
+              <img class="w-full" src="{{$result['product_image_link']}}" alt="Mountain">
+              <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2">{{ $result['product_name'] }}</div>
+                <strong class="text-gray-700 text-base">{{ $result['product_manufacturer'] }}</strong>
+                <p class="text-gray-700 text-base">
+                    {{ $result['product_price'] }}
+                </p>
+              </div>
+              <div class="px-6 pt-4 pb-2">
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{$result['product_color_amount']}}</span>
+              </div>
             </div>
+          </div>
         @endforeach
     </div>
 </div>
