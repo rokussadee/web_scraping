@@ -18,7 +18,7 @@ $scrape = function() {
         $this->results = [];
         $command = [
             'python3',
-            '/app/PythonScripts/scraper.py',
+            base_path('/app/PythonScripts/scraper.py'),
             '--gender',
             $this->gender,
             '--category',
@@ -105,16 +105,16 @@ mount(function() use ($scrape) {
     </select>
     <button wire:click="scrape">Scrape</button>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+    <div class="grid md:grid-cols-3 gap-4 mt-4">
         @foreach($results as $result)
-            <div class="p-10">
-            <div class="rounded overflow-hidden shadow-lg">
+            <div class="">
+            <div class="rounded overflow-hidden shadow-lg bg-gradient-to-tr from-blue-50 to-white">
               <img class="w-full" src="{{$result['product_image_link']}}" alt="Mountain">
               <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2">{{ $result['product_name'] }}</div>
                 <strong class="text-gray-700 text-base">{{ $result['product_manufacturer'] }}</strong>
                 <p class="text-gray-700 text-base">
-                    {{ $result['product_price'] }}
+                    €{{ $result['product_price'] }}
                 </p>
               </div>
               <div class="px-6 pt-4 pb-2">

@@ -23,19 +23,37 @@ def scrape_products():
         # Extract products
         product_tiles = soup.find_all("div", class_="product-tile-wrapper")
         for product_tile in product_tiles:
-            product_manufacturer = product_tile.find("div", class_="pdp-link")
-            product_name = product_tile.find("div", class_="pdp-link brand")
-            product_image = product_tile.find("img", class_="tile-image")
-            product_image_link = product_image.get('data-src') if product_image.get('data-src') != None else product_image.get('src')
-            product_price = product_tile.find("div", class_="product-tile__price")
-            product_color_amount = product_tile.find("div", class_="product-tile__color-amount")
+
+            # find the target elements
+            product_manufacturer_element = product_tile.find("div", class_="pdp-link")
+            product_name_element = product_tile.find("div", class_="pdp-link brand")
+            product_image_element = product_tile.find("img", class_="tile-image")
+            product_price_element = product_tile.find("div", class_="product-tile__price")
+            product_color_amount_element = product_tile.find("div", class_="product-tile__color-amount")
+
+            # find the required content inside these elements
+            product_manufacturer = product_manufacturer_element.get_text() if product_manufacturer_element else "N/A"
+
+            if product_name_element != None:
+                product_name = product_name_element.get_text() if product_name_element else "N/A"
+            else:
+                continue
+
+            if product_image_element != None:
+                product_image_link = product_image_element.get('data-src') if product_image_element.get('data-src') != None else product_image_element.get('src')
+            else:
+                continue
+
+            product_price = product_price_element.find("span", class_="value").get("content") if product_price_element else "N/A"
+
+            product_color_amount = product_color_amount_element.get_text() if product_color_amount_element else "N/A"
 
             product_dict = {
-                    'product_manufacturer': product_manufacturer.get_text() if product_manufacturer else "N/A",
-                    'product_name': product_name.get_text() if product_name else "N/A",
+                    'product_manufacturer': product_manufacturer,
+                    'product_name': product_name,
                     'product_image_link': product_image_link,
-                    'product_price': product_price.get('content') if product_price else "N/A",
-                    'product_color_amount': product_color_amount.get_text() if product_color_amount else "N/A"
+                    'product_price': product_price,
+                    'product_color_amount': product_color_amount,
                     }
 
             print(product_dict)
