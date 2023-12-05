@@ -1,6 +1,6 @@
 # Torfs Web Scraping 
 
-## Docker + Laravel + Python + MySQL
+## Docker + Laravel LiveWire: Volt + Python: Beautifulsoup + MySQL
 
 ## About
 
