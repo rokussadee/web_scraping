@@ -25,13 +25,14 @@ def scrape_products():
         for product_tile in product_tiles:
             product_manufacturer = product_tile.find("div", class_="pdp-link")
             product_name = product_tile.find("div", class_="pdp-link brand")
-            product_image_link = product_tile.find("img", class_="tile-image")
+            product_image = product_tile.find("img", class_="tile-image")
+            product_image_link = product_image.get('data-src') if product_image.get('data-src') != None else product_image.get('src')
             product_price = product_tile.find("div", class_="product-tile__price")
 
             product_dict = {
                     'product_manufacturer': product_manufacturer.get_text() if product_manufacturer else "N/A",
                     'product_name': product_name.get_text() if product_name else "N/A",
-                    'product_image_link': product_image_link.get('src') if product_image_link else "N/A",
+                    'product_image_link': product_image_link,
                     'product_price': product_price.get_text() if product_price else "N/A",
                     }
 

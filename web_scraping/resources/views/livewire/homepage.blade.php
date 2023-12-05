@@ -97,19 +97,25 @@ mount(function() use ($scrape) {
 );
 ?>
 
-<div>
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <select wire:model="gender">
         <option value="heren">Heren</option>
         <option value="dames">Dames</option>
+        <option value="jongens">Jongens</option>
+        <option value="meisjes">Meisjes</option>
     </select>
     <select wire:model="category">
         <option value="schoenen">Schoenen</option>
-        <option value="kleding">Kleding</option>
+        <option value="tassen">Tassen</option>
+        <option value="accessoires">Accessoires</option>
         <!-- Add other category options as needed -->
     </select>
     <select wire:model="sort">
         <option value="populairste">Populairste</option>
         <option value="nieuwste">Nieuwste</option>
+        <option value="prijs-laag-hoog">Prijs (laag - hoog)</option>
+        <option value="prijs-hoog-laag">Prijs (hoog - laag)</option>
+
         <!-- Add other sort options as needed -->
     </select>
     <button wire:click="scrape">Scrape</button>
