@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::get('scrape', [WebScrapeController::class, 'scrape'])->name('home');
+Route::prefix('api')->name('api.')->group(function () {
+    Route::post('/scrape', [WebScrapeController::class, 'scrape'])
+        ->name('home');
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
